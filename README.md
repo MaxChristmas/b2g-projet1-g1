@@ -17,7 +17,7 @@
 
 - #### On commence sur bash, puis quand le script bash sera fait on passe sur Powershell
 - #### Chaque plage horaire de Project commencera avec une réunion d'avancement
-- #### Réinstallation de Debian 12 pour s'assurer de tous être sur un environnement similaire de travail.
+- #### Réinstallation de Debian 12 et Ubuntu pour s'assurer de tous être sur un environnement similaire de travail.
 # Problèmes et difficultés rencontrés
 
 - #### Organisation de l'équipe :
@@ -25,5 +25,8 @@ La première proposition était de scinder l'équipe en deux, un binôme travail
 
 - #### Rédaction du script :
 Il a été décidé que dans un premier temps, nous allons rédiger le script de façon simple (ouverture de connexion distante, ensuite les commandes, puis fermeture de connexion), puis nous allons rédiger des commandes dans des fichiers à part de sorte à factoriser les commandes et simplifier le script.
+
+- #### Installation des machines virtuelles :
+Il a été décidé qu'on allait installer les machines virtuelles sur un ordinateur dans un premier, puis on partage ces machines virtuelles entre nous. Cependant des problèmes avec le partage a ralenti l'accès à l'environnement de travail pour l'ensemble de l'équipe. Pour répondre à ce problème, les autres membres ont commencés à travailler sur le script et l'étude de la configuration des machines serveurs et clients pour ne pas perdre du temps. De plus, en attendant cet environnement de travail, les membres de l'équipe ont utilisés des machines virtuelles personnelles pour effectuer certains tests.
 
 

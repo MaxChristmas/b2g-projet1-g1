@@ -12,4 +12,5 @@
   - [ ] Test fonctionnel d'une commande ssh en bash
   - [ ]  Transplantation du script bash en powershell
   - [ ]  Test fonctionnel d'une commande ssh en powershell
+  - [ ]   Test fonctionnel entre un client windows et un serveur linux
   - [ ] Rendre le menu dynamique 

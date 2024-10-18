@@ -1,4 +1,4 @@
-# Tache effectué
+# Taches effectuées
 ## Virtualbox
   - [x] VM téléchargé
   - [x] Utilisateur créé

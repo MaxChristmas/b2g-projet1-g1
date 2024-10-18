@@ -1,4 +1,5 @@
 # Taches effectuées
+[🔵🔵🔵🔵🔵🔵🔵⚪⚪⚪⚪⚪] 58%
 ## Virtualbox
   - [x] VM téléchargé
   - [x] Utilisateur créé

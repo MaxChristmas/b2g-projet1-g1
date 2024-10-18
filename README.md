@@ -2,8 +2,8 @@
 # Groupe 1:
 #### Membres : Axel, Hamissou, Ahmed, Matthew
 
-#### Scrum Master : Matthew
 #### Product Owner : Axel
+#### Scrum Master : Matthew
 
 # Objectifs du projet
 

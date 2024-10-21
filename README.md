@@ -8,9 +8,9 @@
 
 - #### Rédaction de deux scripts, un script bash et un script powershell
 - #### Chaque script doit :
-	- #### Effectuer des actions utilisateurs
-	- #### Effectuer des actions ordinateur
-	- #### Faire une journalisation locale (sur le serveur)
+	- #### Effectuer des actions sur les utilisateurs
+	- #### Effectuer des actions sur l'ordinateur client
+	- #### Faire une journalisation sur le serveur
 - #### Il faut une communication pour chaque script entre une machine serveur et une machine client
 # Organisation
 
@@ -34,6 +34,12 @@ La définition précise des tâches ainsi que l'estimation temporelle du travail
 
 - #### Difficultés d'apprentissage au sein du projet pour Ahmed :
 Suite à la rétrospective, Ahmed a indiqué qu'il n'était pas satisfait avec son apprentissage au sein du projet (une note de 3.5/10). Une part du problème est l'organisation et le manque de communication, donc il faudrait prévoir un temps pour voir avec Ahmed ce qui lui conviendrait, d'après lui il a besoin de plus de temps en autonomie mais il y a très probablement des contraintes d'emploi-temps du temps. Suite à l'adaptation de son travail, il faudra lui redemander un score pour voir si les changements étaient bénéfiques.
+
+- #### Troubles de communication :
+L'organisation de l'équipe a souffert à cause d'une communication inadéquate. Il a été décidé collectivement que pour éviter les confusions d'organisation, toute tâche entreprise par un membre de l'équipe doit être signalée sur notre groupe slack de sorte à éviter les confusions potentielles dans l'organisation.
+
+- #### Trello :
+Pour le travail de gestion du product backlog du product owner, il a été décidé qu'il faudrait utiliser trello pour gérer les tâches et avoir une archive du travail.
 # Retours rétrospective 1 (18/10/2024) :
 
 - Le support de présentation n'était pas adapté. Il faudra prévoir un support plus facile à voir au projecteur

@@ -61,6 +61,137 @@ UsePAM no
    
    > sudo apt install openssh-server
 
+____________________________________
+#### Détail du script
+### shebang
+```
+- #!/bin/bash
+```
+### Bloc des Variables utilisées dans le script
+```
+- LOG_FILE="/var/log/log_evt.log"  # Chemin du fichier de journalisation
+- USER=$(whoami)                   # Utilisateur serveur Debian
+- DATE=$(date +"%Y%m%d")           # Affiche la date au format : année, mois, jour
+- TIME=$(date +"%H%M%S")           # Affiche la date au format : heure, minute, seconde
+- TARGET_IP="192.168.128.46"       # Adresse IP du client Ubuntu
+- TARGET_USER="wilder"             # Nom utilisateur client Ubuntu
+```
+
+### Fonctions associées
+- Fonction pour créer un utilisateur sur la machine distante :
+```
+create_user() {
+        echo " Création d'un utilisateur "
+        read -p " Nom du nouvel utilisateur : " new_user          # demande le nom pour le nouvel utilisateur et stockage dans new_user
+        ssh $TARGET_USER@$TARGET_IP "sudo useradd $new_user"      # ssh pour création d'un nouvel utilisateur sur une machine distante
+       
+       if [ $? -eq 0 ]; then                                     # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "Utilisateur $new_user créé avec succès."
+        else
+                echo "Erreur lors de l'exécution de la commande"
+    fi
+    log_event "Création de l'utilisateur $new_user"                   # journalisation de la création d'utilisateur dans un fichier log
+    read -p "Appuyez sur une touche pour revenir au menu principal..."      # retourner sur le menu principal en appuyant une touche 
+}
+```
+- Fonction pour supprimer un utilisateur sur la machine distante :
+```
+delete_user() {
+        echo " Suppression d'un utilisateur : " 
+        read -p " Nom de l'utilisateur à supprimer : " del_user       # demande le nom d'utilisateur à supprimer et stockage dans del_user
+        ssh $TARGET_USER@$TARGET_IP "sudo userdel $del_user"          # ssh pour suppression d'un nouvel utilisateur sur une machine distante
+
+        if [ $? -eq 0 ]; then                                         # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "Utilisateur $del_user a été supprimé avec succès."
+        else
+                echo "Erreur lors de l'exécution de la commande"
+    fi
+    log_event "Suppression de l'utilisateur $del_user"              # journalisation de la suppression d'utilisateur dans un fichier log
+    read -p "Appuyez sur une touche pour revenir au menu principal..."        # retourner sur le menu principal en appuyant une touche
+    main_menu
+}
+```
+- Fonction pour la dernière connexion d'un utilisateur sur la machine distante :
+```
+last_login_user() {
+        echo " Dernière connexion d'un utilisateur : "
+        read -p "Nom de l'utilisateur : " login_user                    # demande le nom d'un utilisateur  et stockage dans login_user
+    last_login=$(ssh $TARGET_USER@$TARGET_IP "lastlog -u $login_user")  # affiche la dernière connexion de l'utilisateur défini dans la variable login_user
+
+    if [ $? -eq 0 ]; then                                         # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "Dernière connexion : $last_login."
+        else
+                echo "Erreur lors de l'exécution de la commande"
+    fi
+    log_event "Affichage de la dernière connexion de $login_user"        # journalisation de la dernière connexion dans un fichier log
+    echo "$last_login" > ~/Documents/info_"$login_user"_"$DATE".txt       # enregistrer les informations de la dernière connexion dans un fichier texte en locale
+    read -p "Appuyez sur une touche pour revenir au menu principal..."       # retourner sur le menu principal en appuyant une touche
+    main_menu
+}
+```
+- Fonction pour arrêter la machine distante : 
+```
+shutdown_computer() {
+        echo " Arrêter la machine : "
+        ssh $TARGET_USER@$TARGET_IP "sudo shutdown now"           # ssh pour Arrêter la machine distante
+
+        if [ $? -eq 0 ]; then                                     # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "La machine $TARGET_IP est en cours arrêt."
+        else
+                echo "Erreur lors de l'arrêt..."
+    fi
+    log_event "Arrêt de la machine $TARGET_IP"                         # journalisation de l'arrêt de la machine distante dans un fichier log
+    read -p "Appuyez sur une touche pour revenir au menu principal..."     # retourner sur le menu principal en appuyant une touche
+    main_menu
+}
+```
+- Fonction pour redémarrer la machine distante : 
+```
+reboot_computer() {
+        echo "Redémarrer la machine :"                      
+        ssh $TARGET_USER@$TARGET_IP "sudo reboot"                  # ssh pour redemarrer la machine distante
+
+        if [ $? -eq 0 ]; then                                      # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "La machine $TARGET_IP est en cours de redémarrage."
+        else
+                echo "Erreur lors du redémarrage..."
+    fi
+    log_event "Redémarrage de la machine $TARGET_IP"             # journalisation du redémarrage de la machine distante dans un fichier log
+    read -p "Appuyez sur une touche pour revenir au menu principal..."      # retourner sur le menu principal en appuyant une touche
+    main_menu
+}
+```
+- Fonction pour obtenir la version de l'OS de la machine distante :
+```
+os_version() {
+        echo "Obtenir la version de l'OS :"
+    version=$(ssh $TARGET_USER@$TARGET_IP "lsb_release -a")   # obtenir les informations sur la version de l'OS de la machine distante et stockage dans version
+
+    if [ $? -eq 0 ]; then                                     # condition vérifie si la dernière commande s'est excutée avec succès
+                echo "Version de l'OS : $version"
+        else
+                echo "Erreur lors de l'exécution de la commande."
+    fi
+
+    log_event "Récupération de la version de l'OS sur la machine $TARGET_IP"    # journalisation de la version Os de la machine distante dans un fichier log
+    echo "$version" > /home/wilder/Documents/info_OS_"$TARGET_IP"_"$DATE".txt   # enregistrer les informations de la version Os dans un fichier texte en locale
+    read -p "Appuyez sur une touche pour revenir au menu principal..."
+    main_menu
+}
+```
+- Fonction pour journaliser les événements :
+```
+log_event() {
+    echo "$DATE-$TIME-$USER-$1" >> $LOG_FILE    # enregistrer des événements importants et détaillés dans un fichier de log
+}
+```
+- Démarrage du script :
+```
+log_event "********StartScript********"
+
+main_menu
+```
+
 ______________________________________________________________________________________________________________
 ______________________________________________________________________________________________________________
 

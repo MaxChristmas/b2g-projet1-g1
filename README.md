@@ -29,6 +29,8 @@ ________________________________________________________________________________
 Ce document comporte une présentation générale de notre projet, nos objectifs, nos rendus, nos difficultés et les améliorations éventuelles
 ### install.md
 Ce fichier détaille les spécifications techniques de notre projet ainsi que les différentes étapes de configuration de nos environnements et le fonctionnement général du projet.
+### manual.md
+Ce fichier est un guide d'utilisation fonctionnel pour ceux qui vont exécuter les scripts.
 ### Fichiers avancements
 les fichiers avanceement[n].md, où n est un chiffre, représentent les compte-rendus de nos réunions d'avancement définis dans l'organisation d'équipe.
 ### Fichiers planning
@@ -62,4 +64,24 @@ ________________________________________________________________________________
 # Rendus finaux
 
 # Améliorations
+### Rendus :
+- #### Complexification des scripts :
+On pourrait ajouter d'autres commandes, par exemple de la gestion de fichiers, de permissions, de configuration de l'ordinateur client, etc.
+- #### Approfondir la documentation :
+La documentation pourrait être améliorée, notamment : 
+	- La documentation technique PowerShell, moins complète que celle pour bash
+ 	- Le manuel utilisateur, qui pourrait rentrer dans plus de détails quand au fait de guider et référencer les actions et l'interfaçage produit par les scripts
+  	- Une version en anglais en plus du français qui était demandé
+### Organisationnelles :
+- #### Standardisation technique :
+Dans un projet de développement de ce style, il aurait été mieux de se mettre d'accord sur des conventions techniques sur l'architecture des scripts, la rédaction de code, le nom des variables, etc. Ceci évite certaines confusions entre développeurs et améliore la cohérence de développement au sein de l'équipe, ce qui évite de perdre plus de temps que nécessaire.
+- #### Validation technique :
+Bien qu'il y avait de la vérification technique et fonctionnelle, celle-ci n'était pas officiellement intégré dans notre workflow. Une validation systématique permet de détecter les troubles fonctionnelles plus tôt dans le sprint.
+- #### Git et Github
+Le manque de temps et les troubles de communication ont fait que git et par extension n'ont pas étés proprement utilisés pour le développement. Git et Github sont des outils puissants qui aide grandement le développement d'équipe sur des projets communs, et une meilleure utilisation de ces outils aurait éviter de perdre du temps pour la mutualisation de code. De plus, Github sert d'historique de développement, notamment avec l'historique des commits.
+- #### Plus de temps d'organisations (présentation méthode Scrum, sprint planning) :
+Il aurait fallu prendre plus de temps pour les réunions d'organisation, notamment concernant le découpage du travail dans le tout premier planning ainsi qu'une estimation temporelle de ces tâches.
+De plus, il aurait fallu prendre du temps pour présenter en plus de détail la méthode scrum et git/github, vu que la majorité des membres n'étaient pas familiers avec ces outils.
+Évidemment, la problématique est que plus les temps de réunions augmentent, moins il y a de temps de développement, mais dans notre cas plus de temps d'organisation aurait fait gagner du temps par le biais d'éviter des malentendus inutiles.
+
 

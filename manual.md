@@ -4,6 +4,42 @@ ________________________________________________________________________________
 ________________________________________________________________________________________________
 # Script Bash
 
+La fonction main_menu() affiche un menu principal avec des options
+```
+main_menu() {
+        clear                                   # efface l'écran du terminal, présentation plus propre
+        echo "==== Menu Principal ===="
+        echo " * Gérer les utilisateurs * "
+        echo " -------------------------- "
+        echo " 1. Créer un utilisateur"
+        echo " 2. Supprimer un utilisateur"
+        echo " 3. Dernière connexion d'un utilisateur"
+        echo
+        echo " * Gérer les ordinateurs * "
+        echo " -------------------------- "
+        echo " 4. Arrêter la machine"
+        echo " 5. Redémarrer la machine"
+        echo " 6. Obtenir la version de l'OS"
+        echo
+        echo " 7. Quitter"
+
+        read -p "Choisissez une option : " choice
+        case $choice in                            # bloc (case ... esac), exécuter des commandes en fonction du choix de l'utilisateur
+                1) create_user ;;                  # fonction create_user sera appelée, défini dans le script 
+                2) delete_user ;;                  # fonction delete_user sera appelée, défini dans le script
+                3) last_login_user ;;              # fonction last_login_user pour obtenir la dernière connexion, défini dans le script
+                4) shutdown_computer ;;            # fonction shutdown_computer pour arrêter la machine, défini dans le script
+                5) reboot_computer ;;              # fonction reboot_computer pour redémarrer la machine, défini dans le script
+                6) os_version ;;                   # fonction os_version pour obtenir la version du système d'exploitation.
+                7) log_event "**********EndScript**********"; exit 0 ;;    # fonction pour enregistrer un événement de fin, puis quitter
+                *) echo "Choix non valable."; main_menu ;;         # capturer tous les autres choix non valides et relance  du menu principal
+        esac
+
+}
+```
+Chaque option du menu vient avec une description pour définir ce que fait l'option.
+Pour choisir une option à exécuter, l'utilisateur rentre le numéro correspondant et tappe sur la touche Entrée.
+Pour le détail technique des fonctions, se référer au fichier technique `install.md`.
 ________________________________________________________________________________________________
 ________________________________________________________________________________________________
 # Script PowerShell

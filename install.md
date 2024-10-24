@@ -2,14 +2,14 @@
 Ce document va préciser l'ensemble de la configuration et du paramétrage de nos environnements de livrables.
 
 ______________________________________________________________________________________________________________
+______________________________________________________________________________________________________________
 
+## Linux
 ### Préparation des VM
 - sudo apt-get install vim (pas nécessaire mais une préférence de notre équipe)
 - sudo apt-get install git (pour permettre le versionnement depuis le terminal)
 
-______________________________________________________________________________________________________________
-
-## Configuration de réseau des VM :
+### Configuration de réseau des VM :
 - Configuration de réseau des vm Debian et ubuntu : accès par pont
 - Verifaction de l'adresse ip grâce à : 
   > ip addr ou ip a
@@ -18,7 +18,7 @@ ________________________________________________________________________________
   > ssh user@ip-machine
 
 _si ssh non actif ... l'activé_
-## Configuration de ssh :
+### Configuration de ssh :
 >- sudo apt update
 >- sudo apt install openssh-server
 >- sudo apt systemctl start ssh
@@ -29,7 +29,7 @@ _( enable pour configurer votre système pour démarrer automatiquement le servi
 - Vérification si ssh est bien activé :
   > sudo systemctl status ssh
  
-## Générer une clé ssh sur la VM serveur :
+### Générer une clé ssh sur la VM serveur :
 - Pour générer (par défaut dans "~/.ssh/id_rsa") :
   > ssh-keygen -t rsa -b 4096 
 - Copier la clé publique SSH sur la VM client :
@@ -43,7 +43,7 @@ _(la clé publique sera ajoutée au fichier ~/.ssh/authorized_keys du client.)_
 _(Si la configuration est correcte, vous devriez être connecté au serveur sans avoir à entrer de mot de passe.)_
 
 _sinon..._
-## Désactiver l'authentification par mot de passe
+### Désactiver l'authentification par mot de passe
 - Sur la machine client, modifiez le fichier de configuration SSH : 
   > sudo nano /etc/ssh/sshd_config
 - Cherchez et modifiez ces lignes :
@@ -59,4 +59,14 @@ UsePAM no
  - solution utilisée : désinstallation et réinstallation de ssh
    > sudo apt remove --purge openssh-server
    
-   > sudo apt install openssh-server 
+   > sudo apt install openssh-server
+
+______________________________________________________________________________________________________________
+______________________________________________________________________________________________________________
+
+## Windows
+### Exigences
+- Client Windows 10 & Serveur Windows Server 2022
+- Accès SSH du serveur au client
+- Il faut exécuter la console PowerShell en mode administrateur
+- Éteindre les pare-feus des deux ordinateurs

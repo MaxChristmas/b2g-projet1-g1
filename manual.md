@@ -50,7 +50,8 @@ Ce script permet de contrôller une machine Windows distante et de gérer des ut
 ### Variables
 - Le nom d'utilisateur côté machine serveur
 - Le nom d'utilisateur et l'adresse IP de la machine client
-![image1]([[[image.png](https://files.slack.com/files-pri/T6SG2QGG2-F07SVSQ0XB9/2.png)](https://github.com/MaxChristmas/b2g-projet1-g1/blob/main/1.png)](https://raw.githubusercontent.com/MaxChristmas/b2g-projet1-g1/refs/heads/main/1.png?token=GHSAT0AAAAAACZDACDGYAVYV6BUTMP2S5SMZY2M3PA))
+![1](https://github.com/user-attachments/assets/ab6ecc8a-8be0-4915-a7c7-2c933c6151df)
+
 # Fonctions
 - Affichage d'un menu d'options pour la gestion de la machine client et des utilisateurs de la machine client. Les options disponibles sont :
     - Création d'un nouvel utilisateur
@@ -58,7 +59,8 @@ Ce script permet de contrôller une machine Windows distante et de gérer des ut
     - Redémarrer la machine client
     - Éteindre la machine client
 
-![alt text]([[image-1.png](https://files.slack.com/files-pri/T6SG2QGG2-F07TZ7ABT9N/1.png)](https://github.com/MaxChristmas/b2g-projet1-g1/blob/main/2.png))
+![2](https://github.com/user-attachments/assets/a000ad78-0a67-4a8b-9ac9-87a64de7cc20)
 # Exécution
 À l'appel du script, la fonction principale s'exécute, affichant un menu avec les différentes options. Pour exécuter les différentes commandes, l'utilisateur fourni l'un des numéros proposés, ce qui va exécuter une sous-fonction pour effectuer l'opération voulue.
-![alt text]([[image-2.png](https://files.slack.com/files-pri/T6SG2QGG2-F07TP3Z1L49/3.png)](https://github.com/MaxChristmas/b2g-projet1-g1/blob/main/3.png))
+![3](https://github.com/user-attachments/assets/18e2beef-6309-4276-bd3b-8fe9059021d2)
+

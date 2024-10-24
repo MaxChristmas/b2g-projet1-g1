@@ -50,7 +50,7 @@ Ce script permet de contrôller une machine Windows distante et de gérer des ut
 ### Variables
 - Le nom d'utilisateur côté machine serveur
 - Le nom d'utilisateur et l'adresse IP de la machine client
-![image1]([[image.png](https://files.slack.com/files-pri/T6SG2QGG2-F07SVSQ0XB9/2.png)](https://github.com/MaxChristmas/b2g-projet1-g1/blob/main/1.png))
+![image1]([[[image.png](https://files.slack.com/files-pri/T6SG2QGG2-F07SVSQ0XB9/2.png)](https://github.com/MaxChristmas/b2g-projet1-g1/blob/main/1.png)](https://raw.githubusercontent.com/MaxChristmas/b2g-projet1-g1/refs/heads/main/1.png?token=GHSAT0AAAAAACZDACDGYAVYV6BUTMP2S5SMZY2M3PA))
 # Fonctions
 - Affichage d'un menu d'options pour la gestion de la machine client et des utilisateurs de la machine client. Les options disponibles sont :
     - Création d'un nouvel utilisateur

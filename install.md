@@ -198,6 +198,13 @@ ________________________________________________________________________________
 ## Windows
 ### Exigences
 - Client Windows 10 & Serveur Windows Server 2022
-- Accès SSH du serveur au client
 - Il faut exécuter la console PowerShell en mode administrateur
 - Éteindre les pare-feus des deux ordinateurs
+- Accès SSH du serveur au client. Il faut donc installer ssh avec la commande :
+  `Add-WIndowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0`
+  Pour allumer le service, on entre la commande :
+  `Start-Service sshd`
+  On peut vérifier si le service tourne avec la commande :
+  `Get-Service sshd`
+  Pour tester la connexion ssh, on utilise une commande de la forme :
+  `ssh utilisateur@adresse_ip`

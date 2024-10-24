@@ -1,5 +1,5 @@
-# Documentation installation
-Ce document va préciser l'ensemble de la configuration et du paramétrage de nos environnements de livrables.
+# Documentation installation et technique
+Ce document va préciser l'ensemble de la configuration et du paramétrage de nos environnements de livrables ainsi que certains détails techniques.
 
 ______________________________________________________________________________________________________________
 ______________________________________________________________________________________________________________

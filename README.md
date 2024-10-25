@@ -62,6 +62,9 @@ L'organisation de l'équipe a souffert à cause d'une communication inadéquate.
 Pour le travail de gestion du product backlog du product owner, il avait été décidé qu'il faudrait utiliser trello pour gérer les tâches et avoir une archive du travail. Cependant, par manque de temps, il a été décidé que l'on allait pas l'utiliser au final.
 ____________________________________________________________________________________________________
 # Rendus finaux
+- Objectifs principaux accomplis
+- Objectif secondaire en cours
+- Documentation présente
 
 # Améliorations
 ### Rendus :

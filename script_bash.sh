@@ -11,93 +11,99 @@ TIME=$(date +"%H%M%S")
 
 # Fonction pour ajouter une nouvelle IP à la base de données
 ajouter_nouvelle_ip() {
-
     echo "=== Ajout d'une nouvelle IP ==="
 
     while true; do
-
         read -p "Donnez un nom pour l'hôte : " nouveau_hostname
-
         if [ -z "$nouveau_hostname" ]; then
             echo "Veuillez rentrer une valeur"
         else
             break
         fi
-
     done
 
     while true; do
-
         read -p "Entrez l'adresse IP : " nouvelle_ip
 
+        # Fonction pour valider un octet d'IP
         is_valid_number() {
-
-            if [[ $1 -ge 0 && $1 -le 255 ]]; then
-
+            if [[ $1 -gt 0 && $1 -lt 255 ]]; then
                 return 0  # valide
-
             else
-
                 return 1  # non valide
-
             fi
         }
 
         # Séparation de la chaîne en utilisant le '.' comme séparateur
         IFS='.' read -r part1 part2 part3 part4 <<< "$nouvelle_ip"
 
-        # Vérification si nous avons exactement 4 parties
-        if  [[ -z $part4 || -n $(echo "$nouvelle_ip" | grep -E '[^0-9.]') ]] > /dev/null; then
+        # Vérification si nous avons exactement 4 parties et que chaque partie est un entier valide
+        if [[ -z $part4 || $(echo "$nouvelle_ip" | grep -E '[^0-9.]') ]] > /dev/null; then
             echo "Le format n'est pas correct. Veuillez entrer une adresse au format x.x.x.x"
-            
         else
-
-            # Vérification de chaque partie
-            if ! is_valid_number "$part1" && is_valid_number "$part2" && is_valid_number "$part3" && is_valid_number "$part4"; then
-
+            if is_valid_number "$part1" && is_valid_number "$part2" && is_valid_number "$part3" && is_valid_number "$part4"; then
                 # Vérifier si l'IP existe déjà dans la base de données
                 if grep -q ",$nouvelle_ip," "$FICHIER_DB"; then
-        
                     echo "Cette adresse IP existe déjà dans la base de données."
-                
                 else
-
                     break
-
                 fi
-        
-        
             else
-
                 echo "L'adresse IP n'est pas valide."
             fi
-
-
         fi
-
     done
 
+    # Gestion des utilisateurs associés à l'hôte et à l'IP
+    local nouveaux_utilisateurs=()
+    while true; do
+        while true; do
+            # Demander les utilisateurs associés
+            read -p "Entrez un nouveau utilisateur : " nouveaux_utilisateur
+            if [ -z "$nouveaux_utilisateur" ]; then
+                echo "Veuillez rentrer une valeur"
+            else
+                break
+            fi
+        done
 
-    while true;do
-        # Demander les utilisateurs associés
-        read -p "Entrez les utilisateurs associés (séparés par des virgules) : " nouveaux_utilisateurs
+        while true; do
+            read -p "Linux ou Windows : " nouveaux_utilisateur_os
+            if [ -z "$nouveaux_utilisateur_os" ]; then
+                echo "Veuillez rentrer une valeur"
+            elif [[ "$nouveaux_utilisateur_os" == "linux" || "$nouveaux_utilisateur_os" == "windows" ]]; then
+                break
+            else
+                echo "Valeur non valide, veuillez réessayer."
+            fi
+        done
 
-        if [ -z "$nouveaux_utilisateurs" ]; then
-            echo "Veuillez rentrer une valeur"
-        else
+        # Ajouter l'utilisateur et son OS au tableau
+        nouveaux_utilisateurs+=("$nouveaux_utilisateur|$nouveaux_utilisateur_os,")
+
+        # Afficher les utilisateurs ajoutés
+        echo "Utilisateurs actuels : ${nouveaux_utilisateurs[@]}"
+
+        read -p "Ajouter un nouvel utilisateur [oui/non] : " nouveaux_utilisateur_loop
+        if [[ $nouveaux_utilisateur_loop == "oui" ]]; then
+            continue
+        elif [[ $nouveaux_utilisateur_loop == "non" ]]; then
             break
+        else
+            echo "Valeur non valide"
         fi
-
     done
 
     # Ajouter la nouvelle entrée au fichier de base de données
-    echo "$nouveau_hostname,$nouvelle_ip,$nouveaux_utilisateurs" >> "$FICHIER_DB"
+    echo "$nouveau_hostname,$nouvelle_ip,${nouveaux_utilisateurs[*]}" >> "$FICHIER_DB"
 
-    if [[ $? = 0 ]];then
+    if [[ $? == 0 ]]; then
         echo "Nouvelle IP ajoutée avec succès à la base de données."
+    else
+        echo "Erreur lors de l'ajout de la nouvelle IP."
     fi
-
 }
+
 
 #ajouter_nouvelle_utilisateur_ip() {
     
@@ -203,8 +209,11 @@ afficher_menu_selection_de_utilisateur() {
                 if [ -n "${utilisateurs[$choixdeutilisateur]}" ]; then
                     selected_user="${utilisateurs[$choixdeutilisateur]}"
                     echo "Vous avez choisi l'utilisateur: $selected_user"
-                    # Appeler la fonction pour sélectionner une commande (à définir)
-                    afficher_menu_selectionner_une_commande "$ip" "$selected_user"
+
+                    # Séparer la variable en fonction du séparateur "|"
+                    IFS='|' read -r selected_user selected_user_os <<< "$selected_user"
+
+                    afficher_menu_selectionner_une_commande "$ip" "$selected_user" "$selected_user_os"
                 else
                     echo "Choix invalide."
                 fi
@@ -227,6 +236,7 @@ afficher_menu_selection_de_utilisateur() {
 afficher_menu_selectionner_une_commande() {
         local ip="$1"
         local user="$2"
+        local user_os="$3"
 
         if ssh -o BatchMode=yes -o ConnectTimeout=5 "$user@$ip" 'exit'; then
             echo "Connexion SSH réussie"
@@ -245,6 +255,7 @@ afficher_menu_selectionner_une_commande() {
         -------------------------
             IP: $ip
             Utilisateur: $user
+            Système Exploitation: $user_os
         -------------------------
          SELECTIONNER UNE COMMANDE 
         =========================="
@@ -261,17 +272,17 @@ afficher_menu_selectionner_une_commande() {
         echo " 6. Obtenir la version de l'OS"
         read -p "Choisissez une option : " choixdecommande 
         case $choixdecommande in
-            1) create_user "$ip" "$user";;
+            1) create_user "$ip" "$user" "$user_os";;
 
-            2) delete_user "$ip" "$user";;
+            2) delete_user "$ip" "$user" "$user_os";;
 
-            3) last_login_user "$ip" "$user";;
+            3) last_login_user "$ip" "$user" "$user_os";;
 
-            4) shutdown_computer "$ip" "$user";;
+            4) shutdown_computer "$ip" "$user" "$user_os";;
 
-            5) reboot_computer "$ip" "$user";;
+            5) reboot_computer "$ip" "$user" "$user_os";;
 
-            6) os_version "$ip" "$user";;
+            6) os_version "$ip" "$user" "$user_os";;
 
             BACK)
                 echo "Retour au menu précédent."
@@ -291,118 +302,170 @@ afficher_menu_selectionner_une_commande() {
 
 create_user() {
 
-	echo " Création d'un utilisateur "
+    if [[ $3 == "linux" ]];then
 
-	read -p " Nom du nouvel utilisateur : " new_user
+        echo " Création d'un utilisateur "
 
-	echo "ssh $2@$1 "sudo useradd $new_user""
-	
-	if [ $? -eq 0 ]; then
-		echo "Utilisateur $new_user créé avec succès."
-	else
-		echo "Erreur lors de l'exécution de la commande"
+        read -p " Nom du nouvel utilisateur : " new_user
+
+        echo "ssh $2@$1 "sudo useradd $new_user""
+        
+        if [ $? -eq 0 ]; then
+            echo "Utilisateur $new_user créé avec succès."
+        else
+            echo "Erreur lors de l'exécution de la commande"
+        fi
+
+        log_event "Création de l'utilisateur $new_user"
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
     fi
 
-    log_event "Création de l'utilisateur $new_user"
-
     read -p "Appuyez sur une touche pour revenir au menu principal..."
-
-    afficher_menu_selectionner_une_commande "$1" "$2"
+    
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
 }
 
 # Fonction pour supprimer un utilisateur sur la machine distante
 
 delete_user() {
 
-    local ip="$1"
+    if [[ $3 == "linux" ]];then
 
-    local user="$2"
+        local ip="$1"
 
-        echo " Suppression d'un utilisateur : " 
-	read -p " Nom de l'utilisateur à supprimer : " del_user
-        ssh $2@$1 "sudo userdel $del_user"
+        local user="$2"
 
-        if [ $? -eq 0 ]; then
-                echo "Utilisateur $del_user a été supprimé avec succès."
-        else
-                echo "Erreur lors de l'exécution de la commande"
+            echo " Suppression d'un utilisateur : " 
+        read -p " Nom de l'utilisateur à supprimer : " del_user
+            ssh $2@$1 "sudo userdel $del_user"
+
+            if [ $? -eq 0 ]; then
+                    echo "Utilisateur $del_user a été supprimé avec succès."
+            else
+                    echo "Erreur lors de l'exécution de la commande"
+        fi
+        log_event "Suppression de l'utilisateur $del_user"
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
     fi
-    log_event "Suppression de l'utilisateur $del_user"
+
     read -p "Appuyez sur une touche pour revenir au menu principal..."
-    afficher_menu_selectionner_une_commande "$1" "$2"
+
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
+
 }
 
 # Fonction pour la dernière connexion d'un utilisateur sur la machine distante
 
 last_login_user() {
-	echo " Dernière connexion d'un utilisateur : "
-    
-    last_login=$(ssh $2@$1 "lastlog -u $2")
-    
-    if [ $? -eq 0 ]; then
-                echo "Dernière connexion : $last_login."
-        else
-                echo "Erreur lors de l'exécution de la commande"
-    fi
-    log_event "Affichage de la dernière connexion de $login_user"
 
-    echo "$last_login" > ~/Documents/info_$login_user_$DATE.txt
+    if [[ $3 == "linux" ]];then
+
+        echo " Dernière connexion d'un utilisateur : "
+        
+        last_login=$(ssh $2@$1 "lastlog -u $2")
+        
+        if [ $? -eq 0 ]; then
+                    echo "Dernière connexion : $last_login."
+            else
+                    echo "Erreur lors de l'exécution de la commande"
+        fi
+        log_event "Affichage de la dernière connexion de $login_user"
+
+        echo "$last_login" > ~/Documents/info_$login_user_$DATE.txt
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
+    fi
 
     read -p "Appuyez sur une touche pour revenir au menu principal..."
 
-    afficher_menu_selectionner_une_commande "$1" "$2"
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
 }
 
 # Fonction pour arrêter la machine distante
 
 shutdown_computer() {
-	echo " Arrêter la machine : "
-	ssh $2@$1 "sudo shutdown now"
+
+    if [[ $3 == "linux" ]];then
+
+	    echo " Arrêter la machine : "
+
+	    ssh $2@$1 "sudo shutdown now"
 	
-	if [ $? -eq 0 ]; then
-                echo "La machine $1 est en cours arrêt."
-        else
-                echo "Erreur lors de l'arrêt..."
+        if [ $? -eq 0 ]; then
+                    echo "La machine $1 est en cours arrêt."
+            else
+                    echo "Erreur lors de l'arrêt..."
+        fi
+
+        log_event "Arrêt de la machine $1"
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
     fi
-    log_event "Arrêt de la machine $1"
+
     read -p "Appuyez sur une touche pour revenir au menu principal..."
-    afficher_menu_selectionner_une_commande "$1" "$2"
+
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
 }
 
 # Fonction pour redémarrer la machine distante
 
 reboot_computer() {
-	echo "Redémarrer la machine :"
-	ssh $2@$1 "sudo reboot"
 
-	if [ $? -eq 0 ]; then
-                echo "La machine $1 est en cours de redémarrage."
-        else
-                echo "Erreur lors du redémarrage..."
+    if [[ $3 == "linux" ]];then
+
+        echo "Redémarrer la machine :"
+        ssh $2@$1 "sudo reboot"
+
+        if [ $? -eq 0 ]; then
+                    echo "La machine $1 est en cours de redémarrage."
+            else
+                    echo "Erreur lors du redémarrage..."
+        fi
+        log_event "Redémarrage de la machine $1"
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
     fi
-    log_event "Redémarrage de la machine $1"
+    
     read -p "Appuyez sur une touche pour revenir au menu principal..."
-    afficher_menu_selectionner_une_commande "$1" "$2"
+
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
+
 }
 
 # Fonction pour obtenir la version de l'OS de la machine distante
 
 os_version() {
 
-	echo "Obtenir la version de l'OS :"
-    
-    local version=$(ssh $2@$1 "lsb_release -a")
-    
-    if [ $? -eq 0 ]; then
-                echo "Version de l'OS : $version"
-        else
-                echo "Erreur lors de l'exécution de la commande."
+    if [[ $3 == "linux" ]];then
+
+        echo "Obtenir la version de l'OS :"
+        
+        local version=$(ssh $2@$1 "lsb_release -a")
+        
+        if [ $? -eq 0 ]; then
+                    echo "Version de l'OS : $version"
+            else
+                    echo "Erreur lors de l'exécution de la commande."
+        fi
+
+        log_event "Récupération de la version de l'OS sur la machine $1"
+
+        echo "$version" > ~/Documents/info_OS_"$1"_"$DATE".txt
+
+    #else 
+        # INTEGRER LA FONCTION SSH BASH VERS WINDOWS
     fi
 
-    log_event "Récupération de la version de l'OS sur la machine $1"
-    echo "$version" > ~/Documents/info_OS_"$1"_"$DATE".txt
     read -p "Appuyez sur une touche pour revenir au menu principal..."
-    afficher_menu_selectionner_une_commande "$1" "$2"
+
+    afficher_menu_selectionner_une_commande "$1" "$2" "$3"
 }
 
 # Fonction pour journaliser les événements
